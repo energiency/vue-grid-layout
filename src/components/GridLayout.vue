@@ -526,6 +526,7 @@
                 event.preventDefault();
                 event.stopPropagation();
                 this.dragEnterCounter++;
+                this.$emit('drag-enter')
             },
 
             onDragLeave(event) {
@@ -539,6 +540,7 @@
                 if (this.dragEnterCounter === 0) {
                     this.removeDroppingPlaceholder();
                 }
+                this.$emit('drag-leave')
             },
 
             onDragOver(event) {
@@ -570,9 +572,23 @@
                     containerWidth: this.width !== null ? this.width : 100,
                 };
 
-                if (!this.droppingPlaceholder) {
-                    const {x, y} = calcXY(positionParams, droppingPosition.top, droppingPosition.left, w, h);
+                const width = positionParams.containerWidth / positionParams.cols * (w / 2);
+                const height = positionParams.rowHeight * (h / 2 + 1);
+                const pos = { ...droppingPosition};
+                if (pos.top > height) {
+                    pos.top -= height;
+                } else {
+                    pos.top = 0;
+                }
 
+                if (pos.left < width) {
+                    pos.left = 0;
+                } else if (pos.left < positionParams.containerWidth - width ) { 
+                    pos.left -= width;
+                }
+
+                if (!this.droppingPlaceholder) {
+                    const {x, y} = calcXY(positionParams, pos.top, pos.left, w, h);
                     this.droppingPlaceholder = {
                         x,
                         y,
@@ -583,7 +599,7 @@
                     
                     this.dragEvent('dragstart', DROPPING_ID, x, y, h, w);
                 } else {
-                    const {x, y} = calcXY(positionParams, droppingPosition.top, droppingPosition.left, w, h);
+                    const {x, y} = calcXY(positionParams, pos.top, pos.left, w, h);
 
                     if (x !== this.droppingPlaceholder.x || y !== this.droppingPlaceholder.y) {
                         this.droppingPlaceholder.x = x;
@@ -591,6 +607,7 @@
                         this.dragEvent('dragmove', DROPPING_ID, x, y, h, w);
                     }
                 }
+                this.$emit('drag-over')
             },
 
             onDrop(event) {
