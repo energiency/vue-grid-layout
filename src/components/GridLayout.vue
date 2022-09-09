@@ -526,7 +526,6 @@
                 event.preventDefault();
                 event.stopPropagation();
                 this.dragEnterCounter++;
-                this.$emit('drag-enter')
             },
 
             onDragLeave(event) {
@@ -540,7 +539,6 @@
                 if (this.dragEnterCounter === 0) {
                     this.removeDroppingPlaceholder();
                 }
-                this.$emit('drag-leave')
             },
 
             onDragOver(event) {
@@ -607,7 +605,6 @@
                         this.dragEvent('dragmove', DROPPING_ID, x, y, h, w);
                     }
                 }
-                this.$emit('drag-over')
             },
 
             onDrop(event) {
