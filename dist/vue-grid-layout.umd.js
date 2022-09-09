@@ -1340,7 +1340,7 @@ module.exports = __webpack_require__("8e60") ? function (object, key, value) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1705dc22-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=371784c4&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1705dc22-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=4add634d&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',_vm._g({ref:"item",staticClass:"vue-grid-layout",style:(_vm.mergedStyle)},_vm.isDroppable ? {
         dragenter: _vm.onDragEnter,
         dragover: _vm.onDragOver,
@@ -1350,7 +1350,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=371784c4&
+// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=4add634d&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js
 var es7_object_get_own_property_descriptors = __webpack_require__("8e6e");
@@ -2000,25 +2000,22 @@ var DROPPING_ID = '__dropping-elem__';
         rowHeight: this.rowHeight,
         containerWidth: this.width !== null ? this.width : 100
       };
-      var width = positionParams.containerWidth / positionParams.cols * (w / 2);
-      var height = positionParams.rowHeight * (h / 2 + 1);
 
-      var pos = _objectSpread({}, droppingPosition);
+      var _calcItemSize = Object(calculateUtils["b" /* calcItemSize */])(positionParams, w, h),
+          width = _calcItemSize.width,
+          height = _calcItemSize.height;
 
-      if (pos.top > height) {
-        pos.top -= height;
-      } else {
-        pos.top = 0;
-      }
-
-      if (pos.left < width) {
-        pos.left = 0;
-      } else if (pos.left < positionParams.containerWidth - width) {
-        pos.left -= width;
-      }
+      var offset = {
+        left: width / 2,
+        top: height / 2
+      };
+      var pos = {
+        top: droppingPosition.top - offset.top,
+        left: droppingPosition.left - offset.left
+      };
 
       if (!this.droppingPlaceholder) {
-        var _calcXY = Object(calculateUtils["b" /* calcXY */])(positionParams, pos.top, pos.left, w, h),
+        var _calcXY = Object(calculateUtils["c" /* calcXY */])(positionParams, pos.top, pos.left, w, h),
             x = _calcXY.x,
             y = _calcXY.y;
 
@@ -2031,7 +2028,7 @@ var DROPPING_ID = '__dropping-elem__';
         };
         this.dragEvent('dragstart', DROPPING_ID, x, y, h, w);
       } else {
-        var _calcXY2 = Object(calculateUtils["b" /* calcXY */])(positionParams, pos.top, pos.left, w, h),
+        var _calcXY2 = Object(calculateUtils["c" /* calcXY */])(positionParams, pos.top, pos.left, w, h),
             _x = _calcXY2.x,
             _y = _calcXY2.y;
 
@@ -3119,7 +3116,8 @@ module.exports = function (it) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return calcGridColWidth; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return calcXY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return calcItemSize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return calcXY; });
 /**
  * Compute the column width.
  *
@@ -3131,6 +3129,24 @@ function calcGridColWidth(positionParams) {
       containerWidth = positionParams.containerWidth,
       cols = positionParams.cols;
   return (containerWidth - margin[0] * (cols + 1)) / cols;
+}
+/**
+ * Compute an item width and height.
+ *
+ * @param  {Object} positionParams Parameters of grid needed for coordinates calculations.
+ * @param  {Number} w              W coordinate in grid units.
+ * @param  {Number} h              H coordinate in grid units.
+ * @return {Object}                width and height (in pixels).
+ */
+
+function calcItemSize(positionParams, w, h) {
+  return {
+    // 0 * Infinity === NaN, which causes problems with resize constriants;
+    // Fix this if it occurs.
+    // Note we do it here rather than later because Math.round(Infinity) causes deopt
+    width: w === Infinity ? w : Math.round(calcGridColWidth(positionParams) * w + Math.max(0, w - 1) * positionParams.margin[0]),
+    height: h === Infinity ? h : Math.round(positionParams.rowHeight * h + Math.max(0, h - 1) * positionParams.margin[1])
+  };
 }
 /**
  * Translate x and y coordinates from pixels to grid units.
@@ -4931,12 +4947,12 @@ __webpack_require__.d(all_namespaceObject, "edgeTarget", function() { return edg
 __webpack_require__.d(all_namespaceObject, "elements", function() { return snappers_elements; });
 __webpack_require__.d(all_namespaceObject, "grid", function() { return grid; });
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1705dc22-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridItem.vue?vue&type=template&id=d1637810&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1705dc22-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridItem.vue?vue&type=template&id=171db91e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-item",class:_vm.classObj,style:(_vm.style)},[_vm._t("default"),(_vm.resizableAndNotStatic)?_c('span',{ref:"handle",class:_vm.resizableHandleClass}):_vm._e()],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/GridItem.vue?vue&type=template&id=d1637810&
+// CONCATENATED MODULE: ./src/components/GridItem.vue?vue&type=template&id=171db91e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js
 var es7_object_get_own_property_descriptors = __webpack_require__("8e6e");
@@ -4953,11 +4969,11 @@ var es6_object_keys = __webpack_require__("456d");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
 var es6_regexp_replace = __webpack_require__("a481");
 
-// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js
-var defineProperty = __webpack_require__("bd86");
-
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.is-finite.js
 var es6_number_is_finite = __webpack_require__("fca0");
+
+// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js
+var defineProperty = __webpack_require__("bd86");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -12659,29 +12675,20 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     calcPosition: function calcPosition(x, y, w, h) {
       var colWidth = this.calcColWidth(); // add rtl support
 
-      var out;
+      var _calcItemSize = Object(calculateUtils["b" /* calcItemSize */])(this.positionParams, w, h),
+          width = _calcItemSize.width,
+          height = _calcItemSize.height;
 
-      if (this.renderRtl) {
-        out = {
-          right: Math.round(colWidth * x + (x + 1) * this.margin[0]),
-          top: Math.round(this.rowHeight * y + (y + 1) * this.margin[1]),
-          // 0 * Infinity === NaN, which causes problems with resize constriants;
-          // Fix this if it occurs.
-          // Note we do it here rather than later because Math.round(Infinity) causes deopt
-          width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * this.margin[0]),
-          height: h === Infinity ? h : Math.round(this.rowHeight * h + Math.max(0, h - 1) * this.margin[1])
-        };
-      } else {
-        out = {
-          left: Math.round(colWidth * x + (x + 1) * this.margin[0]),
-          top: Math.round(this.rowHeight * y + (y + 1) * this.margin[1]),
-          // 0 * Infinity === NaN, which causes problems with resize constriants;
-          // Fix this if it occurs.
-          // Note we do it here rather than later because Math.round(Infinity) causes deopt
-          width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * this.margin[0]),
-          height: h === Infinity ? h : Math.round(this.rowHeight * h + Math.max(0, h - 1) * this.margin[1])
-        };
-      }
+      var out = Object(defineProperty["a" /* default */])({
+        width: width,
+        height: height,
+        top: Math.round(this.rowHeight * y + (y + 1) * this.margin[1])
+      }, this.renderRtl ? 'right' : 'left', Math.round(colWidth * x + (x + 1) * this.margin[0])); // if (this.renderRtl) {
+      //     out.right = Math.round(colWidth * x + (x + 1) * this.margin[0]);
+      // } else {
+      //     out.left = Math.round(colWidth * x + (x + 1) * this.margin[0]);
+      // }
+
 
       return out;
     },
@@ -12694,7 +12701,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
      */
     // TODO check if this function needs change in order to support rtl.
     calcXY: function calcXY(top, left) {
-      return Object(calculateUtils["b" /* calcXY */])(this.positionParams, top, left, this.innerW, this.innerH);
+      return Object(calculateUtils["c" /* calcXY */])(this.positionParams, top, left, this.innerW, this.innerH);
     },
     // Helper for generating column width
     calcColWidth: function calcColWidth() {

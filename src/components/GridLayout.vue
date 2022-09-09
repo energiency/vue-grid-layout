@@ -31,7 +31,7 @@
 
     import {bottom, compact, getLayoutItem, moveElement, validateLayout, cloneLayout, getAllCollisions} from '@/helpers/utils';
     import {getBreakpointFromWidth, getColsFromBreakpoint, findOrGenerateResponsiveLayout} from "@/helpers/responsiveUtils";
-    import {calcXY} from '@/helpers/calculateUtils';
+    import {calcXY, calcItemSize} from '@/helpers/calculateUtils';
 
     //var eventBus = require('./eventBus');
 
@@ -570,20 +570,15 @@
                     containerWidth: this.width !== null ? this.width : 100,
                 };
 
-                const width = positionParams.containerWidth / positionParams.cols * (w / 2);
-                const height = positionParams.rowHeight * (h / 2 + 1);
-                const pos = { ...droppingPosition};
-                if (pos.top > height) {
-                    pos.top -= height;
-                } else {
-                    pos.top = 0;
-                }
-
-                if (pos.left < width) {
-                    pos.left = 0;
-                } else if (pos.left < positionParams.containerWidth - width ) { 
-                    pos.left -= width;
-                }
+                const { width, height } = calcItemSize(positionParams, w, h);
+                const offset = {
+                    left: width / 2,
+                    top: height / 2,
+                };
+                 const pos = {
+                    top: droppingPosition.top - offset.top,
+                    left: droppingPosition.left - offset.left
+                };
 
                 if (!this.droppingPlaceholder) {
                     const {x, y} = calcXY(positionParams, pos.top, pos.left, w, h);
