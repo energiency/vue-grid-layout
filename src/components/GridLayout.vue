@@ -29,11 +29,9 @@
     import Vue from 'vue';
     const elementResizeDetectorMaker = require("element-resize-detector");
 
-    import {bottom, compact, getLayoutItem, moveElement, validateLayout, cloneLayout, getAllCollisions} from '@/helpers/utils';
+    import {bottom, compact, getLayoutItem, moveElement, validateLayout, cloneLayout, getAllCollisions, getFirstCollision, sortLayoutItemsByRowCol} from '@/helpers/utils';
     import {getBreakpointFromWidth, getColsFromBreakpoint, findOrGenerateResponsiveLayout} from "@/helpers/responsiveUtils";
     import {calcXY, calcItemSize} from '@/helpers/calculateUtils';
-
-    //var eventBus = require('./eventBus');
 
     import GridItem from './GridItem.vue'
     import {addWindowEventListener, removeWindowEventListener} from "@/helpers/DOM";
@@ -579,27 +577,42 @@
                     top: droppingPosition.top - offset.top,
                     left: droppingPosition.left - offset.left
                 };
+                const {x, y} = calcXY(positionParams, pos.top, pos.left, w, h);
+                const eventType = !this.droppingPlaceholder ? 'dragstart' : 'dragmove';
 
-                if (!this.droppingPlaceholder) {
-                    const {x, y} = calcXY(positionParams, pos.top, pos.left, w, h);
-                    this.droppingPlaceholder = {
+                this.droppingPlaceholder ??= {
+                    x,
+                    y,
+                    w,
+                    h,
+                    i: DROPPING_ID,
+                };
+
+                if (this.preventCollision) {
+                    const sorted = sortLayoutItemsByRowCol(this.layout);
+                    const xCollisions = getFirstCollision(sorted, {
+                        ...this.droppingPlaceholder,
                         x,
-                        y,
-                        w,
-                        h,
-                        i: DROPPING_ID,
-                    };
-                    
-                    this.dragEvent('dragstart', DROPPING_ID, x, y, h, w);
-                } else {
-                    const {x, y} = calcXY(positionParams, pos.top, pos.left, w, h);
+                    });
 
-                    if (x !== this.droppingPlaceholder.x || y !== this.droppingPlaceholder.y) {
+                    const yCollisions = getFirstCollision(sorted, {
+                            ...this.droppingPlaceholder,
+                            y,
+                    });
+                    if (!xCollisions) {
                         this.droppingPlaceholder.x = x;
+                    } else if (!yCollisions) {
                         this.droppingPlaceholder.y = y;
-                        this.dragEvent('dragmove', DROPPING_ID, x, y, h, w);
+                    } else  {
+                        return
                     }
+                } else if (x !== this.droppingPlaceholder.x || y !== this.droppingPlaceholder.y) {
+                    this.droppingPlaceholder.x = x;
+                    this.droppingPlaceholder.y = y;
                 }
+
+                this.dragEvent(eventType, DROPPING_ID, x, y, h, w);
+
             },
 
             onDrop(event) {
