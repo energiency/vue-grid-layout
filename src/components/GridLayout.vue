@@ -620,7 +620,9 @@
                 event.stopPropagation();
 
                 this.dragEnterCounter = 0;
-                this.$emit('drop', event, this.droppingPlaceholder);
+                if (this.placeholder?.i === DROPPING_ID) {
+                    this.$emit('drop', event, this.placeholder);
+                }
                 this.removeDroppingPlaceholder();
                 delete this.positionsBeforeDrag;
                 this.$emit('layout-updated', this.layout);
@@ -629,6 +631,13 @@
             removeDroppingPlaceholder() {
                 this.isDragging = false;
                 this.droppingPlaceholder = null;
+                this.placeholder = {
+                    x: 0,
+                    y: 0,
+                    w: 0,
+                    h: 0,
+                    i: -1
+                };
 
                 if (this.restoreOnDrag) {
                     compact(this.layout, this.verticalCompact, this.positionsBeforeDrag);

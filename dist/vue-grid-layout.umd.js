@@ -1340,7 +1340,7 @@ module.exports = __webpack_require__("8e60") ? function (object, key, value) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a30ba02-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=44cdeb75&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a30ba02-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=1cd518fd&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',_vm._g({ref:"item",staticClass:"vue-grid-layout",style:(_vm.mergedStyle)},_vm.isDroppable ? {
         dragenter: _vm.onDragEnter,
         dragover: _vm.onDragOver,
@@ -1350,7 +1350,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=44cdeb75&
+// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=1cd518fd&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js
 var es7_object_get_own_property_descriptors = __webpack_require__("8e6e");
@@ -1442,7 +1442,6 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
 
 
 
- //var eventBus = require('./eventBus');
 
 
 
@@ -2051,10 +2050,16 @@ var DROPPING_ID = '__dropping-elem__';
       this.dragEvent(eventType, DROPPING_ID, x, y, h, w);
     },
     onDrop: function onDrop(event) {
+      var _this$placeholder;
+
       event.preventDefault();
       event.stopPropagation();
       this.dragEnterCounter = 0;
-      this.$emit('drop', event, this.droppingPlaceholder);
+
+      if (((_this$placeholder = this.placeholder) === null || _this$placeholder === void 0 ? void 0 : _this$placeholder.i) === DROPPING_ID) {
+        this.$emit('drop', event, this.placeholder);
+      }
+
       this.removeDroppingPlaceholder();
       delete this.positionsBeforeDrag;
       this.$emit('layout-updated', this.layout);
@@ -2062,6 +2067,13 @@ var DROPPING_ID = '__dropping-elem__';
     removeDroppingPlaceholder: function removeDroppingPlaceholder() {
       this.isDragging = false;
       this.droppingPlaceholder = null;
+      this.placeholder = {
+        x: 0,
+        y: 0,
+        w: 0,
+        h: 0,
+        i: -1
+      };
 
       if (this.restoreOnDrag) {
         Object(utils["c" /* compact */])(this.layout, this.verticalCompact, this.positionsBeforeDrag);
