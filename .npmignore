@@ -1,0 +1,4 @@
+*
+!dist/vue-grid-layout**
+!package.json
+!readme.md
