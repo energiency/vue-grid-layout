@@ -347,8 +347,6 @@
             },
             containerHeight: function () {
                 if (!this.autoSize) return;
-                // console.log("bottom: " + bottom(this.layout))
-                // console.log("rowHeight + margins: " + (this.rowHeight + this.margin[1]) + this.margin[1])
                 const containerHeight =  bottom(this.layout) * (this.rowHeight + this.margin[1]) + this.margin[1] + 'px';
                 return containerHeight;
             },
@@ -360,7 +358,6 @@
                     layout.push(this.droppingPlaceholder);
                 }
 
-                //console.log(eventName + " id=" + id + ", x=" + x + ", y=" + y);
                 let l = getLayoutItem(layout, id);
                 if (!l) {
                     return;
@@ -588,6 +585,9 @@
                     i: DROPPING_ID,
                 };
 
+                const prevX = this.droppingPlaceholder.x;
+                const prevY = this.droppingPlaceholder.y;
+
                 if (this.preventCollision) {
                     const sorted = sortLayoutItemsByRowCol(this.layout);
                     const xCollisions = getFirstCollision(sorted, {
@@ -611,7 +611,11 @@
                     this.droppingPlaceholder.y = y;
                 }
 
-                this.dragEvent(eventType, DROPPING_ID, x, y, h, w);
+                if (eventType === 'dragstart'
+                    || this.droppingPlaceholder.x !== prevX
+                    || this.droppingPlaceholder.y !== prevY) {
+                    this.dragEvent(eventType, DROPPING_ID, x, y, h, w);
+                }
 
             },
 
