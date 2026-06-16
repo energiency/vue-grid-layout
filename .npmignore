@@ -1,0 +1,12 @@
+# Ignore everything by default...
+*
+
+# ...then re-include only what we want to publish.
+# (dist must be re-included as a directory so npm descends into it)
+!dist/
+dist/*
+!dist/vue-grid-layout*
+
+!package.json
+!README.md
+!LICENSE
