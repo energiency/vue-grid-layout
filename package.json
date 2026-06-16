@@ -1,6 +1,9 @@
 {
-  "name": "vue-grid-layout",
+  "name": "@energiency/vue-grid-layout",
   "version": "2.5.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "A draggable and resizable grid layout, as a Vue component.",
   "keywords": [
     "grid",
